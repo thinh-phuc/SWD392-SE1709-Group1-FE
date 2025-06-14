@@ -15,7 +15,7 @@ export default function HeaderStats() {
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="TRAFFIC"
+                  statSubtitle="QUESTION"
                   statTitle="350,897"
                   statArrow="up"
                   statPercent="3.48"
@@ -39,11 +39,11 @@ export default function HeaderStats() {
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="SALES"
-                  statTitle="924"
+                  statSubtitle="Response Time"
+                  statTitle="2m 15s"
                   statArrow="down"
                   statPercent="1.10"
-                  statPercentColor="text-orange-500"
+                  // statPercentColor="text-orange-500"
                   statDescripiron="Since yesterday"
                   statIconName="fas fa-users"
                   statIconColor="bg-pink-500"
@@ -51,7 +51,7 @@ export default function HeaderStats() {
               </div>
               <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
                 <CardStats
-                  statSubtitle="PERFORMANCE"
+                  statSubtitle="Advisor Performance"
                   statTitle="49,65%"
                   statArrow="up"
                   statPercent="12"

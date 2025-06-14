@@ -20,7 +20,7 @@ export default function CardSettings() {
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
           <form>
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              User Information
+              Profile
             </h6>
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
