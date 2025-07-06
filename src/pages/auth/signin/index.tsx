@@ -9,19 +9,38 @@ import Bg from '@/assets/bg.jpg';
 import { Separator } from '@/components/ui/separator';
 import { useInitForgotPassword } from '@/queries/auth.query';
 import ForgotPasswordForm from './components/forgot-password-form';
+import __helpers from '@/helpers';
+import { useRouter } from '@/routes/hooks';
 
 export default function SignInPage() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const router = useRouter();
 
   const handleLoginGoogle = () => {
-    const a = document.createElement('a');
-    const url =
-      process.env.NODE_ENV === 'production'
-        ? 'https://api.hoptacxaluavang.site'
-        : 'https://api.hoptacxaluavang.site';
-    a.href = `${url}/api/auth/google-login`;
-    a.target = '_self';
-    a.click();
+    //Open a popup window for the OAuth flow.
+    const popup = window.open(
+      'https://thinhthpse183083-001-site1.qtempurl.com/api/auth/google-signin',
+      'googleLogin',
+      'width=600,height=600'
+    );
+
+    //Listen for the token message from the popup
+    window.addEventListener(
+      'message',
+      (event) => {
+        // Validate the origin for security
+        if (event.origin !== 'https://thinhthpse183083-001-site1.qtempurl.com')
+          return;
+
+        if (event.data && event.data.token) {
+          __helpers.cookie_set('AT', event.data.token);
+          //Close the popup after receiving the token
+          popup!.close();
+          router.push('/');
+        }
+      },
+      false
+    );
   };
 
   const { mutateAsync: initForgotPassword } = useInitForgotPassword();
@@ -59,13 +78,13 @@ export default function SignInPage() {
           }}
         ></div>
 
-        <div className="relative z-20 flex items-center text-lg font-medium text-current">
-          LiveStock
+        <div className="relative z-20 flex items-center text-lg font-medium text-current text-white">
+          FChatbot
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
-            <p className="text-lg text-current">
-              Hệ thống quản trị - LiveStock
+            <p className="text-lg text-current text-white">
+              Chatbot tư vấn tuyển sinh - FChatbot
             </p>
           </blockquote>
         </div>
@@ -148,6 +167,18 @@ export default function SignInPage() {
                 </svg>
                 Google
               </Button>
+              <div className="mt-2 text-center">
+                <span className="text-sm text-muted-foreground">
+                  Chưa có tài khoản?{' '}
+                  <button
+                    type="button"
+                    className="underline underline-offset-4 hover:text-primary"
+                    onClick={() => router.push('/register')}
+                  >
+                    Đăng ký
+                  </button>
+                </span>
+              </div>
             </>
           )}
 

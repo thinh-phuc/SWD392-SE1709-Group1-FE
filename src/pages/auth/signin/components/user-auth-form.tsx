@@ -1,135 +1,102 @@
+import { jwtDecode } from 'jwt-decode';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import __helpers from '@/helpers';
-import { useLogin } from '@/queries/auth.query';
-import { useGetMyInfo } from '@/queries/user.query';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(2, { message: 'Tên đăng nhập phải có ít nhất 2 ký tự' }),
-  password: z.string().min(2, { message: 'Mật khẩu phải có ít nhất 2 ký tự' })
-});
-
-type UserFormValue = z.infer<typeof formSchema>;
+import { useState } from 'react';
+import { useRouter } from '@/routes/hooks';
 
 export default function UserAuthForm() {
   const [loading, setLoading] = useState(false);
-  const { mutateAsync: login } = useLogin();
   const [queryError, setQueryError] = useState<string | null>(null);
-  const defaultValues = {
-    username: '',
-    password: ''
+  const [form, setForm] = useState({ username: '', password: '' });
+  const router = useRouter();
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const { data: dataInfoUser, refetch } = useGetMyInfo();
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const error = params.get('error');
-    if (error) {
-      setQueryError(decodeURIComponent(error));
-    }
-  }, []);
-
-  const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  });
-
-  useEffect(() => {
-    if (dataInfoUser) {
-      console.log(dataInfoUser);
-      window.location.href = '/dashboard';
-    }
-  }, [dataInfoUser]);
-
-  const onSubmit = async (data: UserFormValue) => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
+    setQueryError(null);
     try {
       const model = {
-        username: data.username,
-        password: data.password
+        email: form.username,
+        password: form.password
       };
-      const res = await login(model);
-      console.log(res);
-      if (res) {
-        const token = res.data;
+      const response = await fetch(
+        'https://thinhthpse183083-001-site1.qtempurl.com/api/auth/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(model)
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        setQueryError(
+          errorData?.message || 'Tên đăng nhập hoặc mật khẩu không đúng'
+        );
+        setLoading(false);
+        return;
+      }
+      const data = await response.json();
+      console.log('Fetch API response:', data);
+      const token = data.tokenString;
+      if (token) {
         __helpers.cookie_set('AT', token);
-        refetch();
-        // window.location.href = '/';
+        const decoded: any = jwtDecode(token);
+        const role = decoded?.role;
+        if (role === 'User') {
+          router.push('/');
+        } else {
+          router.push('/admin');
+        }
+      } else {
+        setQueryError('Đăng nhập thất bại. Không nhận được token.');
       }
     } catch (err: any) {
-      form.setError('password', {
-        type: 'manual',
-        message: err?.data?.message || 'Tên đăng nhập hoặc mật khẩu không đúng'
-      });
+      setQueryError('Có lỗi xảy ra. Vui lòng thử lại sau.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-        {/* Username Field */}
-        <FormField
-          control={form.control}
+    <form onSubmit={onSubmit} className="mx-auto w-full max-w-sm space-y-4">
+      <div>
+        <label className="mb-1 block">Email</label>
+        <input
+          type="email"
           name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tên đăng nhập</FormLabel>
-              <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Nhập tên đăng nhập..."
-                  disabled={loading}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          value={form.username}
+          onChange={onChange}
+          disabled={loading}
+          className="w-full rounded border px-3 py-2"
+          placeholder="Nhập email..."
+          required
         />
-
-        {/* Password Field */}
-        <FormField
-          control={form.control}
+      </div>
+      <div>
+        <label className="mb-1 block">Mật khẩu</label>
+        <input
+          type="password"
           name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Mật khẩu</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Nhập mật khẩu của bạn..."
-                  disabled={loading}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          value={form.password}
+          onChange={onChange}
+          disabled={loading}
+          className="w-full rounded border px-3 py-2"
+          placeholder="Nhập mật khẩu của bạn..."
+          required
         />
-
-        {queryError && (
-          <p className="text-center text-sm text-red-500">{queryError}</p>
-        )}
-
-        <Button disabled={loading} className="ml-auto w-full" type="submit">
-          Đăng nhập
-        </Button>
-      </form>
-    </Form>
+      </div>
+      {queryError && (
+        <p className="text-center text-sm text-red-500">{queryError}</p>
+      )}
+      <Button disabled={loading} className="w-full" type="submit">
+        Đăng nhập
+      </Button>
+    </form>
   );
 }

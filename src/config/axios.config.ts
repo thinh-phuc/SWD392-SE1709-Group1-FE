@@ -3,8 +3,8 @@ import helpers from '../helpers';
 
 const baseURL =
   process.env.NODE_ENV === 'production'
-    ? 'https://lms.autopass.blog/'
-    : 'https://lms.autopass.blog/';
+    ? 'https://thinhthpse183083-001-site1.qtempurl.com'
+    : 'https://thinhthpse183083-001-site1.qtempurl.com';
 
 const onRequestSuccess = (config: any) => {
   config.headers['Authorization'] = `Bearer ${helpers.cookie_get('AT')}`;
