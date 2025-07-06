@@ -1,4 +1,5 @@
 import NotFound from '@/pages/not-found';
+// import path from 'path';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 // import ProtectedRoute from './ProtectedRoute';
@@ -10,6 +11,10 @@ const DashboardLayout = lazy(
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const HomePage = lazy(() => import('@/pages/HomePage/index'));
 const RegisterPage = lazy(() => import('@/pages/auth/register'));
+const ProfilePage = lazy(() => import('@/pages/ProfilePage/index'));
+const ProfileForm = lazy(
+  () => import('@/pages/ProfilePage/components/ProfileForm')
+);
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -27,6 +32,15 @@ export default function AppRouter() {
           path: '/',
           element: <HomePage />,
           index: true
+        },
+        {
+          path: '/profile',
+          element: <ProfilePage />,
+          index: true
+        },
+        {
+          path: '/profile-form',
+          element: <ProfileForm />
         }
       ]
     }

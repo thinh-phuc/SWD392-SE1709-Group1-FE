@@ -36,7 +36,7 @@ export default function SignInPage() {
           __helpers.cookie_set('AT', event.data.token);
           //Close the popup after receiving the token
           popup!.close();
-          router.push('/');
+          router.push('/profile');
         }
       },
       false

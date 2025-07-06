@@ -43,13 +43,15 @@ export default function UserAuthForm() {
       }
       const data = await response.json();
       console.log('Fetch API response:', data);
+      __helpers.localStorage_set('user_id', data.response.id);
+      __helpers.localStorage_set('user_name', data.response.name);
       const token = data.tokenString;
       if (token) {
         __helpers.cookie_set('AT', token);
         const decoded: any = jwtDecode(token);
         const role = decoded?.role;
         if (role === 'User') {
-          router.push('/');
+          router.push('/profile');
         } else {
           router.push('/admin');
         }

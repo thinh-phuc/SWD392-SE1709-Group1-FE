@@ -5,7 +5,6 @@ import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Link } from 'react-router-dom';
 import { useRouter } from '@/routes/hooks';
 
 export default function Register() {
