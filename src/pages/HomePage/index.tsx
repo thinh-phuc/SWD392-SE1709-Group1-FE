@@ -1,22 +1,55 @@
+import { useState } from 'react';
+import __helpers from '@/helpers';
+import { ChatInterface } from './components/ChatInterface';
+import { SessionSidebar } from './components/SessionSidebar';
+import { useGetChatSessions } from '@/queries/chat.query';
+
 export default function HomePage() {
+  const studentId = __helpers.localStorage_get('selectedProfile');
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
+    null
+  );
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const { data: sessions = [], isLoading } = useGetChatSessions(studentId!);
+
+  if (!studentId) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h2 className="mb-4 text-2xl font-bold text-gray-800">
+            No Profile Selected
+          </h2>
+          <p className="text-gray-600">
+            Please select a student profile to continue.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-w-screen flex min-h-screen flex-col items-center justify-center bg-black text-white">
-      <h1 className="mt-10 text-center text-2xl font-bold">
-        Welcome to the Home Page
-      </h1>
-      <p className="mt-4 text-center">
-        This is the main landing page of our application.
-      </p>
-      <div className="mt-6 flex justify-center">
-        <img
-          src="https://media.vov.vn/sites/default/files/styles/large/public/2025-03/1_151.jpg"
-          alt="Home Page"
-          className="w-1/2 rounded-lg shadow-lg"
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <SessionSidebar
+        sessions={sessions}
+        selectedSessionId={selectedSessionId}
+        onSessionSelect={setSelectedSessionId}
+        onNewChat={() => setSelectedSessionId(null)}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
+        isLoading={isLoading}
+      />
+
+      {/* Main Chat Area */}
+      <div className="flex flex-1 flex-col">
+        <ChatInterface
+          sessionId={selectedSessionId}
+          studentId={parseInt(studentId)}
+          onSessionCreated={setSelectedSessionId}
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         />
       </div>
-      <p className="mt-4 text-center text-gray-600">
-        Explore our features and get started with your journey!
-      </p>
     </div>
   );
 }
