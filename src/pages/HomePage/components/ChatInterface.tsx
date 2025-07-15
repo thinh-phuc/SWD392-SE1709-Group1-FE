@@ -5,6 +5,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGetChatMessages, useSendMessage } from '@/queries/chat.query';
 import { MessageBubble } from './MessageBubble';
 import { Send, Menu, Bot } from 'lucide-react';
+import { useRouter } from '@/routes/hooks';
+import __helpers from '@/helpers';
 
 interface Message {
   messageId: number;
@@ -26,6 +28,7 @@ export function ChatInterface({
   onSessionCreated,
   onToggleSidebar
 }: ChatInterfaceProps) {
+  const router = useRouter();
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -117,6 +120,25 @@ export function ChatInterface({
               {sessionId ? `Chat Session #${sessionId}` : 'New Chat'}
             </h1>
           </div>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push('/profile')}
+            className="border-blue-600 text-blue-600 hover:bg-blue-50"
+          >
+            Profiles
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              router.push('/login');
+              __helpers.cookie_delete('AT');
+            }}
+            className="border-red-600 text-red-600 hover:bg-red-50"
+          >
+            Logout
+          </Button>
         </div>
       </div>
 
