@@ -15,6 +15,8 @@ const ProfilePage = lazy(() => import('@/pages/ProfilePage/index'));
 const ProfileForm = lazy(
   () => import('@/pages/ProfilePage/components/ProfileForm')
 );
+const CreateBranch = lazy(() => import('@/pages/BranchPage/CreateBranch'));
+const BranchList = lazy(() => import('@/pages/BranchPage/BranchList'));
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -41,6 +43,15 @@ export default function AppRouter() {
         {
           path: '/profile-form',
           element: <ProfileForm />
+        },
+        // Thêm các route cho branch
+        {
+          path: '/branches/create',
+          element: <CreateBranch />
+        },
+        {
+          path: '/branches',
+          element: <BranchList />
         }
       ]
     }
