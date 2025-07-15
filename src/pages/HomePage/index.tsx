@@ -3,8 +3,10 @@ import __helpers from '@/helpers';
 import { ChatInterface } from './components/ChatInterface';
 import { SessionSidebar } from './components/SessionSidebar';
 import { useGetChatSessions } from '@/queries/chat.query';
+import { useRouter } from '@/routes/hooks';
 
 export default function HomePage() {
+  const router = useRouter();
   const studentId = __helpers.localStorage_get('selectedProfile');
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(
     null
@@ -23,6 +25,12 @@ export default function HomePage() {
           <p className="text-gray-600">
             Please select a student profile to continue.
           </p>
+          <button
+            className="mt-6 rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white shadow transition hover:bg-blue-600"
+            onClick={() => router.push('/profile')}
+          >
+            Go to profiles page
+          </button>
         </div>
       </div>
     );

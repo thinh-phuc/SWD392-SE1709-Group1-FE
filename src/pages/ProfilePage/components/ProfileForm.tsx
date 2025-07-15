@@ -8,14 +8,17 @@ export default function ProfileForm() {
     description: '',
     fullName: '',
     highSchoolGpa: '',
-    note: ''
+    note: '',
+    hollandType: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -25,9 +28,11 @@ export default function ProfileForm() {
     setLoading(true);
     setError(null);
     try {
+      // Append Holland type and GPA to description
+      const appendedDescription = `${form.description}\nHolland Type: ${form.hollandType}\nGPA: ${form.highSchoolGpa}`;
       await BaseRequest.Post('/api/student-profiles', {
         userId: __helpers.localStorage_get('user_id'),
-        description: form.description,
+        description: appendedDescription,
         fullName: form.fullName,
         highSchoolGpa: Number(form.highSchoolGpa),
         note: form.note,
@@ -182,6 +187,42 @@ export default function ProfileForm() {
                 className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
                 placeholder="Any additional information you'd like to add..."
               />
+            </div>
+
+            <div>
+              <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
+                </svg>
+                Holland Type
+              </label>
+              <select
+                name="hollandType"
+                value={form.hollandType}
+                onChange={handleChange}
+                required
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+              >
+                <option value="" disabled>
+                  Select your Holland type
+                </option>
+                <option value="Realistic">Realistic</option>
+                <option value="Investigative">Investigative</option>
+                <option value="Artistic">Artistic</option>
+                <option value="Social">Social</option>
+                <option value="Enterprising">Enterprising</option>
+                <option value="Conventional">Conventional</option>
+              </select>
             </div>
           </div>
 
