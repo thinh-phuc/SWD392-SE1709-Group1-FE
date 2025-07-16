@@ -33,6 +33,8 @@ export default function SignInPage() {
           return;
 
         if (event.data && event.data.token) {
+          __helpers.localStorage_set('user_id', event.data.response.Id);
+          __helpers.localStorage_set('user_name', event.data.response.Name);
           __helpers.cookie_set('AT', event.data.token);
           //Close the popup after receiving the token
           popup!.close();
