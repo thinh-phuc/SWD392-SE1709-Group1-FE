@@ -53,6 +53,12 @@ export default function ProfilePage() {
           <div className="text-center">
             <div className="mb-4 text-4xl">❌</div>
             <p className="text-lg font-medium text-red-600">{error}</p>
+            <button
+              className="mt-6 rounded-lg bg-blue-500 px-6 py-3 font-semibold text-white shadow transition hover:bg-blue-600"
+              onClick={() => router.push('/login')}
+            >
+              Go to Login
+            </button>
           </div>
         </div>
       </div>
