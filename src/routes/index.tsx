@@ -15,6 +15,7 @@ const ProfilePage = lazy(() => import('@/pages/ProfilePage/index'));
 const ProfileForm = lazy(
   () => import('@/pages/ProfilePage/components/ProfileForm')
 );
+const StaffPage = lazy(() => import('@/pages/StaffPage/index'));
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -41,6 +42,10 @@ export default function AppRouter() {
         {
           path: '/profile-form',
           element: <ProfileForm />
+        },
+        {
+          path: '/staff',
+          element: <StaffPage />
         }
       ]
     }
