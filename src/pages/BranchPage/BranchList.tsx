@@ -15,6 +15,8 @@ const BranchList = () => {
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Partial<Branch>>({});
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
 
   const fetchBranches = async () => {
@@ -36,11 +38,16 @@ const BranchList = () => {
 
   const handleDelete = async (id: number) => {
     if (!window.confirm('Bạn có chắc muốn xóa chi nhánh này?')) return;
+    setDeletingId(id);
+    setIsDeleting(true);
     try {
       await deleteBranch(id);
       fetchBranches();
     } catch (err) {
       alert('Xóa branch thất bại!');
+    } finally {
+      setDeletingId(null);
+      setIsDeleting(false);
     }
   };
 
@@ -84,130 +91,160 @@ const BranchList = () => {
   };
 
   return (
-    <div className="mx-auto mt-10 max-w-3xl rounded bg-white p-6 shadow">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold">Danh sách chi nhánh</h2>
-        <button
-          onClick={() => navigate('/branches/create')}
-          className="rounded bg-blue-500 px-4 py-2 text-white"
-        >
-          Tạo mới
-        </button>
-      </div>
-      <table className="mb-4 w-full border">
-        <thead>
-          <tr>
-            <th className="border px-2 py-1">Tên</th>
-            <th className="border px-2 py-1">Địa điểm</th>
-            <th className="border px-2 py-1">Ghi chú</th>
-            <th className="border px-2 py-1">Mô tả</th>
-            {/* <th className="border px-2 py-1">Hoạt động</th> */}
-            <th className="border px-2 py-1">Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {branches
-            .filter((branch) => branch.isActive)
-            .map((branch) =>
-              editingId === branch.branchId ? (
-                <tr key={branch.branchId} className="bg-yellow-50">
-                  <td className="border px-2 py-1">
-                    <input
-                      name="name"
-                      value={editForm.name || ''}
-                      onChange={handleEditChange}
-                      className="w-full rounded border px-2 py-1"
-                    />
-                  </td>
-                  <td className="border px-2 py-1">
-                    <input
-                      name="location"
-                      value={editForm.location || ''}
-                      onChange={handleEditChange}
-                      className="w-full rounded border px-2 py-1"
-                    />
-                  </td>
-                  <td className="border px-2 py-1">
-                    <input
-                      name="note"
-                      value={editForm.note || ''}
-                      onChange={handleEditChange}
-                      className="w-full rounded border px-2 py-1"
-                    />
-                  </td>
-                  <td className="border px-2 py-1">
-                    <input
-                      name="description"
-                      value={editForm.description || ''}
-                      onChange={handleEditChange}
-                      className="w-full rounded border px-2 py-1"
-                    />
-                  </td>
-                  {/* <td className="border px-2 py-1 text-center">
+    <>
+      <div className="mx-auto mt-10 max-w-3xl rounded bg-white p-6 shadow">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold">Danh sách chi nhánh</h2>
+          <button
+            onClick={() => navigate('/branches/create')}
+            className="rounded bg-blue-500 px-4 py-2 text-white"
+          >
+            Tạo mới
+          </button>
+        </div>
+        <table className="mb-4 w-full border">
+          <thead>
+            <tr>
+              <th className="border px-2 py-1">Tên</th>
+              <th className="border px-2 py-1">Địa điểm</th>
+              <th className="border px-2 py-1">Ghi chú</th>
+              <th className="border px-2 py-1">Mô tả</th>
+              {/* <th className="border px-2 py-1">Hoạt động</th> */}
+              <th className="border px-2 py-1">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {branches
+              .filter((branch) => branch.isActive)
+              .map((branch) =>
+                editingId === branch.branchId ? (
+                  <tr key={branch.branchId} className="bg-yellow-50">
+                    <td className="border px-2 py-1">
+                      <input
+                        name="name"
+                        value={editForm.name || ''}
+                        onChange={handleEditChange}
+                        className="w-full rounded border px-2 py-1"
+                      />
+                    </td>
+                    <td className="border px-2 py-1">
+                      <input
+                        name="location"
+                        value={editForm.location || ''}
+                        onChange={handleEditChange}
+                        className="w-full rounded border px-2 py-1"
+                      />
+                    </td>
+                    <td className="border px-2 py-1">
+                      <input
+                        name="note"
+                        value={editForm.note || ''}
+                        onChange={handleEditChange}
+                        className="w-full rounded border px-2 py-1"
+                      />
+                    </td>
+                    <td className="border px-2 py-1">
+                      <input
+                        name="description"
+                        value={editForm.description || ''}
+                        onChange={handleEditChange}
+                        className="w-full rounded border px-2 py-1"
+                      />
+                    </td>
+                    {/* <td className="border px-2 py-1 text-center">
                   <input type="checkbox" name="isActive" checked={!!editForm.isActive} onChange={handleEditChange} />
                 </td> */}
-                  <td className="border px-2 py-1">
-                    <button
-                      onClick={handleSave}
-                      className="mr-2 rounded bg-green-500 px-2 py-1 text-white"
-                    >
-                      Lưu
-                    </button>
-                    <button
-                      onClick={cancelEdit}
-                      className="rounded bg-gray-400 px-2 py-1 text-white"
-                    >
-                      Hủy
-                    </button>
-                  </td>
-                </tr>
-              ) : (
-                <tr key={branch.branchId}>
-                  <td className="border px-2 py-1">{branch.name}</td>
-                  <td className="border px-2 py-1">{branch.location}</td>
-                  <td className="border px-2 py-1">{branch.note}</td>
-                  <td className="border px-2 py-1">{branch.description}</td>
-                  {/* <td className="border px-2 py-1 text-center">{branch.isActive ? 'Có' : 'Không'}</td> */}
-                  <td className="border px-2 py-1">
-                    <button
-                      onClick={() => startEdit(branch)}
-                      className="mr-2 rounded bg-yellow-400 px-2 py-1 text-white"
-                    >
-                      Sửa
-                    </button>
-                    <button
-                      onClick={() => handleDelete(branch.branchId!)}
-                      className="rounded bg-red-500 px-2 py-1 text-white"
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
-        </tbody>
-      </table>
-      <div className="flex justify-center gap-2">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-          className="rounded border px-3 py-1"
-        >
-          Trước
-        </button>
-        <span>
-          Trang {page} / {totalPages}
-        </span>
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage(page + 1)}
-          className="rounded border px-3 py-1"
-        >
-          Sau
-        </button>
+                    <td className="border px-2 py-1">
+                      <button
+                        onClick={handleSave}
+                        className="mr-2 rounded bg-green-500 px-2 py-1 text-white"
+                      >
+                        Lưu
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="rounded bg-gray-400 px-2 py-1 text-white"
+                      >
+                        Hủy
+                      </button>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr key={branch.branchId}>
+                    <td className="border px-2 py-1">{branch.name}</td>
+                    <td className="border px-2 py-1">{branch.location}</td>
+                    <td className="border px-2 py-1">{branch.note}</td>
+                    <td className="border px-2 py-1">{branch.description}</td>
+                    {/* <td className="border px-2 py-1 text-center">{branch.isActive ? 'Có' : 'Không'}</td> */}
+                    <td className="border px-2 py-1">
+                      <button
+                        onClick={() => startEdit(branch)}
+                        className="mr-2 rounded bg-yellow-400 px-2 py-1 text-white"
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        onClick={() => handleDelete(branch.branchId!)}
+                        className="rounded bg-red-500 px-2 py-1 text-white"
+                        disabled={deletingId === branch.branchId}
+                      >
+                        {deletingId === branch.branchId ? 'Đang xóa...' : 'Xóa'}
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )}
+          </tbody>
+        </table>
+        <div className="flex justify-center gap-2">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="rounded border px-3 py-1"
+          >
+            Trước
+          </button>
+          <span>
+            Trang {page} / {totalPages}
+          </span>
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+            className="rounded border px-3 py-1"
+          >
+            Sau
+          </button>
+        </div>
+        {loading}
       </div>
-      {loading && <div className="mt-2 text-center">Đang tải...</div>}
-    </div>
+      {isDeleting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="flex flex-col items-center">
+            <svg
+              className="h-12 w-12 animate-spin text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              ></path>
+            </svg>
+            <span className="mt-2 font-semibold text-white">Đang xóa...</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
