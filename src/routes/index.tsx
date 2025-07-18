@@ -16,6 +16,9 @@ const ProfileForm = lazy(
   () => import('@/pages/ProfilePage/components/ProfileForm')
 );
 const StaffPage = lazy(() => import('@/pages/StaffPage/index'));
+const ProfileEditForm = lazy(
+  () => import('@/pages/ProfilePage/components/ProfileEditForm')
+);
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -46,6 +49,10 @@ export default function AppRouter() {
         {
           path: '/staff',
           element: <StaffPage />
+        },
+        {
+          path: '/profile-edit/:id',
+          element: <ProfileEditForm />
         }
       ]
     }

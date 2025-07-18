@@ -6,8 +6,13 @@ import { Accept, useDropzone } from 'react-dropzone';
 type TFileUploadProps = {
   onChange: (value: File[]) => void;
   value: File[];
+  defaultImageUrl?: string;
 };
-export default function FileUpload({ onChange, value }: TFileUploadProps) {
+export default function FileUpload({
+  onChange,
+  value,
+  defaultImageUrl
+}: TFileUploadProps) {
   console.log('files=>', value);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -28,6 +33,12 @@ export default function FileUpload({ onChange, value }: TFileUploadProps) {
           <input {...getInputProps()} />
           {value && !!value.length ? (
             <ImagePreview file={value[0]} />
+          ) : defaultImageUrl ? (
+            <img
+              src={defaultImageUrl}
+              alt="Profile"
+              className="absolute h-full w-full rounded-full object-cover"
+            />
           ) : (
             <AvatarIcon className="h-36 w-36 text-gray-100" />
           )}
