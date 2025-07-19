@@ -35,6 +35,7 @@ export default function ProfileForm() {
         description: appendedDescription,
         fullName: form.fullName,
         highSchoolGpa: Number(form.highSchoolGpa),
+        hollandType: form.hollandType,
         note: form.note,
         createBy: __helpers.localStorage_get('user_name')
       });
