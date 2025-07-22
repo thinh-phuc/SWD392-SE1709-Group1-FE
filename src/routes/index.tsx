@@ -1,7 +1,7 @@
 import NotFound from '@/pages/not-found';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
-// import ProtectedRoute from './ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute';
 
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
@@ -56,7 +56,11 @@ export default function AppRouter() {
         },
         {
           path: '/staff',
-          element: <StaffPage />,
+          element: (
+            <ProtectedRoute requiredRole={['Admin', 'Staff']}>
+              <StaffPage />
+            </ProtectedRoute>
+          ),
           children: [
             {
               path: 'branches',
