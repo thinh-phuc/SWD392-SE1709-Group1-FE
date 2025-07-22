@@ -15,8 +15,14 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message, isLoading }: MessageBubbleProps) {
   const isUser = message.sender === 'user';
+  // +7 for Vietnam)
+  const TIMEZONE_OFFSET_HOURS = 7;
+
   const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString([], {
+    const date = new Date(dateString);
+    // Add timezone offset in milliseconds
+    date.setHours(date.getHours() + TIMEZONE_OFFSET_HOURS);
+    return date.toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit'
     });

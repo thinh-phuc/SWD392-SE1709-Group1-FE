@@ -115,10 +115,10 @@ export default function ProfilePage() {
 
                 <div className="text-center">
                   <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-blue-400 bg-gradient-to-r from-blue-100 to-indigo-100 shadow-lg">
-                    {profile.imageUrl ? (
+                    {profile.imageUrl && profile.imageUrl !== 'none' ? (
                       <img
                         src={profile.imageUrl}
-                        alt={profile.fullName}
+                        alt={`Profile picture of ${profile.fullName}`}
                         className="h-full w-full rounded-full object-cover"
                       />
                     ) : (
@@ -128,6 +128,7 @@ export default function ProfilePage() {
                         stroke="currentColor"
                         strokeWidth="2"
                         viewBox="0 0 24 24"
+                        aria-label={`Default avatar for ${profile.fullName}`}
                       >
                         <circle cx="12" cy="8" r="4" />
                         <path d="M6 20c0-2.5 3.5-4 6-4s6 1.5 6 4" />

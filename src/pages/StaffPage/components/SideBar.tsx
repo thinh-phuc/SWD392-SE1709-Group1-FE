@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PinLeftIcon } from '@radix-ui/react-icons';
 import { Menu } from 'lucide-react';
+import { useRouter } from '@/routes/hooks';
+import __helpers from '@/helpers';
 
 const menuItems = [
   { name: 'Branches', path: '/staff/branches' },
@@ -11,6 +13,7 @@ const menuItems = [
 ];
 
 const SideBar: React.FC = () => {
+  const router = useRouter();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
@@ -60,7 +63,8 @@ const SideBar: React.FC = () => {
           <button
             className="flex w-full cursor-pointer items-center border-none bg-none py-3 text-base text-red-600"
             onClick={() => {
-              // Add logout logic here
+              router.push('/login');
+              __helpers.cookie_delete('AT');
             }}
           >
             <PinLeftIcon className="mr-4" />
