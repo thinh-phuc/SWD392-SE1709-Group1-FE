@@ -49,7 +49,7 @@ export default function DataTable<TData, TValue>({
   columns,
   data,
   pageCount,
-  pageSizeOptions = [10, 20, 30, 40, 50],
+  pageSizeOptions = [1, 10, 20, 30, 40, 50],
   showAdd = true,
   heightTable = '80dvh',
   placeHolderInputSearch,
@@ -111,15 +111,17 @@ export default function DataTable<TData, TValue>({
   return (
     <>
       {showSearch && (
-        <InputSearch
-          placeholder={placeHolderInputSearch}
-          onSubmit={(value) => {
-            setSearchParams({
-              ...Object.fromEntries(searchParams),
-              keyword: value
-            });
-          }}
-        />
+        <div className="mb-4">
+          <InputSearch
+            placeholder={placeHolderInputSearch}
+            onSubmit={(value) => {
+              setSearchParams({
+                ...Object.fromEntries(searchParams),
+                keyword: value
+              });
+            }}
+          />
+        </div>
       )}
       <ScrollArea
         className={`h-[calc(${heightTable}-220px)] rounded-md border md:h-[calc(${heightTable}-80px)]`}

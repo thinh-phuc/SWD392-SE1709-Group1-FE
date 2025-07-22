@@ -53,7 +53,7 @@ export default function UserAuthForm() {
         if (role === 'User') {
           router.push('/profile');
         } else {
-          router.push('/admin');
+          router.push('/staff');
         }
       } else {
         setQueryError('Đăng nhập thất bại. Không nhận được token.');
