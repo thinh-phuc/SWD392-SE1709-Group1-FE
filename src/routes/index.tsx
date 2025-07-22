@@ -14,6 +14,9 @@ const ProfilePage = lazy(() => import('@/pages/ProfilePage/index'));
 const ProfileForm = lazy(
   () => import('@/pages/ProfilePage/components/ProfileForm')
 );
+const ProfileEditForm = lazy(
+  () => import('@/pages/ProfilePage/components/ProfileEditForm')
+);
 const StaffPage = lazy(() => import('@/pages/StaffPage/index'));
 const BranchPage = lazy(() => import('@/pages/StaffPage/components/Branch'));
 const MajorPage = lazy(() => import('@/pages/StaffPage/components/Major'));
@@ -23,6 +26,7 @@ const ScholarshipPage = lazy(
 const AdmissionTypePage = lazy(
   () => import('@/pages/StaffPage/components/AdmisstionType')
 );
+
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -71,6 +75,10 @@ export default function AppRouter() {
               element: <AdmissionTypePage />
             }
           ]
+        },
+        {
+          path: '/profile-edit/:id',
+          element: <ProfileEditForm />
         }
       ]
     }

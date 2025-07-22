@@ -87,9 +87,52 @@ export default function ProfilePage() {
               <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-2xl">
                 <div className="absolute left-0 top-0 h-2 w-full bg-gradient-to-r from-blue-500 to-indigo-600"></div>
 
+                {/* Settings/Edit button */}
+                <button
+                  type="button"
+                  className="absolute right-4 top-4 z-10 rounded-full bg-gray-100 p-2 text-gray-500 transition hover:bg-blue-100 hover:text-blue-600"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/profile-edit/${profile.studentId}`);
+                  }}
+                  title="Edit Profile"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15.232 5.232l3.536 3.536M9 13l6.536-6.536a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0V17h4"
+                    />
+                  </svg>
+                </button>
+
                 <div className="text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 text-2xl font-bold text-white shadow-lg">
-                    {profile.fullName?.[0]?.toUpperCase() || '?'}
+                  <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-blue-400 bg-gradient-to-r from-blue-100 to-indigo-100 shadow-lg">
+                    {profile.imageUrl ? (
+                      <img
+                        src={profile.imageUrl}
+                        alt={profile.fullName}
+                        className="h-full w-full rounded-full object-cover"
+                      />
+                    ) : (
+                      <svg
+                        className="h-12 w-12 text-blue-300"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M6 20c0-2.5 3.5-4 6-4s6 1.5 6 4" />
+                      </svg>
+                    )}
                   </div>
 
                   <h3 className="mb-2 text-xl font-bold text-gray-800">
