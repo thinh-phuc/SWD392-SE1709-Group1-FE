@@ -1,5 +1,4 @@
 import NotFound from '@/pages/not-found';
-// import path from 'path';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 // import ProtectedRoute from './ProtectedRoute';
@@ -15,10 +14,19 @@ const ProfilePage = lazy(() => import('@/pages/ProfilePage/index'));
 const ProfileForm = lazy(
   () => import('@/pages/ProfilePage/components/ProfileForm')
 );
-const StaffPage = lazy(() => import('@/pages/StaffPage/index'));
 const ProfileEditForm = lazy(
   () => import('@/pages/ProfilePage/components/ProfileEditForm')
 );
+const StaffPage = lazy(() => import('@/pages/StaffPage/index'));
+const BranchPage = lazy(() => import('@/pages/StaffPage/components/Branch'));
+const MajorPage = lazy(() => import('@/pages/StaffPage/components/Major'));
+const ScholarshipPage = lazy(
+  () => import('@/pages/StaffPage/components/ScholarShip')
+);
+const AdmissionTypePage = lazy(
+  () => import('@/pages/StaffPage/components/AdmisstionType')
+);
+
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
@@ -48,7 +56,25 @@ export default function AppRouter() {
         },
         {
           path: '/staff',
-          element: <StaffPage />
+          element: <StaffPage />,
+          children: [
+            {
+              path: 'branches',
+              element: <BranchPage />
+            },
+            {
+              path: 'majors',
+              element: <MajorPage />
+            },
+            {
+              path: 'scholarships',
+              element: <ScholarshipPage />
+            },
+            {
+              path: 'admission-types',
+              element: <AdmissionTypePage />
+            }
+          ]
         },
         {
           path: '/profile-edit/:id',
