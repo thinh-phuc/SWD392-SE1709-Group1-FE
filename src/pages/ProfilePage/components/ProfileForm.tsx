@@ -29,7 +29,7 @@ export default function ProfileForm() {
     setError(null);
     try {
       // Append Holland type and GPA to description
-      const appendedDescription = `${form.description}\nHolland Type: ${form.hollandType}\nGPA: ${form.highSchoolGpa}`;
+      const appendedDescription = `${form.description}. Holland Type: ${form.hollandType}. GPA: ${form.highSchoolGpa}`;
       await BaseRequest.Post('/api/student-profiles', {
         userId: __helpers.localStorage_get('user_id'),
         description: appendedDescription,
